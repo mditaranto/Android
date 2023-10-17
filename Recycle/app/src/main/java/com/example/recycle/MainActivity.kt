@@ -19,44 +19,28 @@ class MainActivity : AppCompatActivity() {
         val contactos = ContactosBinding.inflate(layoutInflater)
         setContentView(contactos.root)
 
-
-
-
         contactos.vistaContactos.adapter = ContactosAdapter(
             listOf(
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
-                Contacto("Juan","12873609"),
+                Contacto("Mario","128736099", true),
+                Contacto("David","128730609", true),
+                Contacto("Lucia","128738609", false),
+                Contacto("Mateo","121873609", true),
+                Contacto("Marcos","128736209", true),
+                Contacto("Luis","128733609", true),
+                Contacto("Juan","128730609", true),
+                Contacto("Paola","128737609", true),
+                Contacto("Esteban","612873609", true),
+                Contacto("Marta","128731609", false),
+                Contacto("Lucas","128732609", true),
+                Contacto("Juan","128743609", true),
+                Contacto("Maria","123458821", false),
 
 
             ),object : ContactoPulsadoListener{
                 override fun contactoPulsado(contacto: Contacto) {
-                    val dial = Intent(
-                        Intent.ACTION_DIAL,
-                        Uri.parse("tel:"+contacto.telefono)
-                    ) // Creamos una llamada al Intent de llamadas
-                    startActivity(dial)
+                    val intent = Intent(Intent.ACTION_DIAL)
+                    intent.data = Uri.parse("tel:${contacto.telefono}")
+                    startActivity(intent)
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.example.recycle
-import android.content.ClipData
+import android.transition.TransitionInflater
+import android.transition.TransitionManager
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,60 +9,85 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.recycle.databinding.ItemContactoBinding
+import java.util.Locale
 
 class ContactosAdapter (private val contactos : List<Contacto>,
                         private val contactoPulsadoListener:ContactoPulsadoListener): RecyclerView.Adapter<ContactosAdapter.ViewHolder>() {
 
-    private lateinit var initials: LinearLayout
-    private lateinit var fullName: LinearLayout
-    private lateinit var foto: ImageView
+    private lateinit var nombre: TextView
+    class ViewHolder(val binding : ItemContactoBinding):RecyclerView.ViewHolder(binding.root) {
 
-    class ViewHolder(private val binding : ItemContactoBinding):RecyclerView.ViewHolder(binding.root) {
-        fun bind ( contacto:Contacto) {
-            binding.nombre.text = contacto.nombre
-            binding.telefono.text = contacto.telefono
-        }
-    }
+            fun bind(contacto: Contacto) {
+                val nombres: List<String> = contacto.nombre.split(" ")
+
+                var iniciales = ""
+                if (nombres.size == 1) {
+                    iniciales = nombres[0].substring(0, 2).uppercase(Locale.ROOT)
+                } else {
+                    for (nombre: String in nombres) {
+                        iniciales += nombre[0]
+                        iniciales.uppercase()
+                    }
+                }
+                val imagen = binding.perfil
+                if (contacto.hombre) {
+                    imagen.setImageResource(R.drawable.perfil)
+                } else {
+                    imagen.setImageResource(R.drawable.mujer)
+                }
+
+                binding.textView.text = iniciales
+                binding.nombre.text = contacto.nombre
+                binding.telefono.text = contacto.telefono
+
+            }
 
 
-    private fun toggleFullName() {
-        if (fullName.visibility == View.GONE) {
-            fullName.visibility = View.VISIBLE
-            initials.visibility = View.GONE
 
-        } else {
-            fullName.visibility = View.GONE
-            initials.visibility = View.VISIBLE
-        }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemContactoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        initials = binding.inic
-        fullName = binding.sinInic
-        foto = binding.perfil
-
         return ViewHolder(binding)
+    }
+
+    override fun getItemCount(): Int {
+        return contactos.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(contactos[position])
+        val transition = TransitionInflater.from(holder.itemView.context).inflateTransition(android.R.transition.fade)
 
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
+
+            val initials = holder.binding.textView
+            nombre = holder.binding.nombre
+            val telf = holder.binding.telefono
+
+            TransitionManager.beginDelayedTransition(holder.itemView as ViewGroup?, transition)
+
+            if (initials.visibility == View.GONE) {
+                initials.visibility = View.VISIBLE
+                nombre.visibility = View.GONE
+                telf.visibility = View.GONE
+
+            } else {
+                initials.visibility = View.GONE
+                nombre.visibility = View.VISIBLE
+                telf.visibility = View.VISIBLE
+            }
+        }
+
+        holder.binding.telefono.setOnClickListener() {
             contactoPulsadoListener.contactoPulsado(contactos[position])
         }
 
-        foto.setOnClickListener {
-            toggleFullName()
-        }
-
     }
 
-    override fun getItemCount(): Int {
-            return contactos.size
-    }
+
 
 
 }

@@ -21,35 +21,11 @@
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="86dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="INICIALES"
             android:textAlignment="center"
             android:textSize="60sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/sinInic"
-        android:layout_width="313dp"
-        android:layout_height="103dp"
-        android:layout_marginStart="3dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/perfil"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/telefono"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <TextView
             android:id="@+id/nombre"
@@ -59,7 +35,22 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:text="TextView"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#878787"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/telefono"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#878787"
+            android:visibility="gone" />
+
     </LinearLayout>
 
     <ImageView
