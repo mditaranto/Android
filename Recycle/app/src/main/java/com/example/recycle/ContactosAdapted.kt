@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.example.recycle.databinding.ItemContactoBinding
 import java.util.Locale
 
@@ -18,27 +19,13 @@ class ContactosAdapter (private val contactos : List<Contacto>,
     class ViewHolder(val binding : ItemContactoBinding):RecyclerView.ViewHolder(binding.root) {
 
             fun bind(contacto: Contacto) {
-                val nombres: List<String> = contacto.nombre.split(" ")
 
-                var iniciales = ""
-                if (nombres.size == 1) {
-                    iniciales = nombres[0].substring(0, 2).uppercase(Locale.ROOT)
-                } else {
-                    for (nombre: String in nombres) {
-                        iniciales += nombre[0]
-                        iniciales.uppercase()
-                    }
-                }
                 val imagen = binding.perfil
-                if (contacto.hombre) {
-                    imagen.setImageResource(R.drawable.perfil)
-                } else {
-                    imagen.setImageResource(R.drawable.mujer)
-                }
 
-                binding.textView.text = iniciales
-                binding.nombre.text = contacto.nombre
-                binding.telefono.text = contacto.telefono
+                Glide
+                    .with(binding.root.context)
+                    .load("https://loremflickr.com/320/240")
+                    .into(imagen)
 
             }
 
@@ -61,28 +48,26 @@ class ContactosAdapter (private val contactos : List<Contacto>,
         holder.bind(contactos[position])
         val transition = TransitionInflater.from(holder.itemView.context).inflateTransition(android.R.transition.fade)
 
+        val imageView = holder.binding.perfil
+
         holder.itemView.setOnClickListener {
 
-            val initials = holder.binding.textView
-            nombre = holder.binding.nombre
-            val telf = holder.binding.telefono
+            imageView.setOnClickListener(View.OnClickListener() {
 
+                public void onClick(View v) {
+                    if(isImageFitToScreen) {
+                        isImageFitToScreen=false;
+                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                        imageView.setAdjustViewBounds(true);
+                    }else{
+                        isImageFitToScreen=true;
+                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    }
+                }
             TransitionManager.beginDelayedTransition(holder.itemView as ViewGroup?, transition)
 
-            if (initials.visibility == View.GONE) {
-                initials.visibility = View.VISIBLE
-                nombre.visibility = View.GONE
-                telf.visibility = View.GONE
 
-            } else {
-                initials.visibility = View.GONE
-                nombre.visibility = View.VISIBLE
-                telf.visibility = View.VISIBLE
-            }
-        }
-
-        holder.binding.telefono.setOnClickListener() {
-            contactoPulsadoListener.contactoPulsado(contactos[position])
         }
 
     }
