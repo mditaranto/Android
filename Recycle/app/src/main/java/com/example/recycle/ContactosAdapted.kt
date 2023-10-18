@@ -52,30 +52,13 @@ class ContactosAdapter (private val contactos : List<Contacto>,
 
         holder.itemView.setOnClickListener {
 
-            imageView.setOnClickListener(View.OnClickListener() {
-
-                public void onClick(View v) {
-                    if(isImageFitToScreen) {
-                        isImageFitToScreen=false;
-                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                        imageView.setAdjustViewBounds(true);
-                    }else{
-                        isImageFitToScreen=true;
-                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                    }
-                }
-            TransitionManager.beginDelayedTransition(holder.itemView as ViewGroup?, transition)
-
-
-        }
 
     }
 
 
 
 
-}
+}}
 
 
 

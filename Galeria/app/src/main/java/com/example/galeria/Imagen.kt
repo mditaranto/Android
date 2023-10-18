@@ -1,6 +1,5 @@
 package com.example.galeria
 
-class Imagen {
+import android.widget.ImageView
 
-    data class Imagen (val url: String)
-}
+data class Imagen (val url: Int)
