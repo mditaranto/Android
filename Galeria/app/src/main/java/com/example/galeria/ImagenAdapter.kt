@@ -14,7 +14,7 @@ class ImagenAdapter(private val imagenes: List<Imagen>,
         fun bind(imagen: Imagen) {
 
             Glide
-                .with(binding.root.context)
+                .with(binding.root)
                 .load(R.drawable.fotoej1)
                 .into(binding.fotitos)
 
