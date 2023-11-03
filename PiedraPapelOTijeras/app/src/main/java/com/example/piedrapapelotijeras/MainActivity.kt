@@ -31,7 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+<<<<<<< HEAD
 import androidx.compose.ui.draw.paint
+=======
+>>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -58,15 +61,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
-    @Composable
-    fun Greeting(name: String, modifier: Modifier = Modifier) {
-
-    }
-
     @Composable
     fun GameScreen() {
 
+        //Lista donde guardo las fotos que voy a utilizar
         val lista = listOf(
             R.drawable.ic_launcher_foreground,
             R.drawable.piedra,
@@ -74,32 +72,44 @@ class MainActivity : ComponentActivity() {
             R.drawable.papel
         )
 
+        //Variable remember de la eleccion del jugador
         var eleccionJ by remember {
             mutableStateOf(0)
         }
+
+        //Variable remember de la eleccion de la maquina (aleatorio)
         var eleccionM by remember {
             mutableStateOf(0)
         }
 
+        //Variable remember boolean que guarda si el jugador ha elegido o no
         var turno by remember {
             mutableStateOf(true)
         }
-        val partHeight = 285.dp
+
+        //Variable remember que guarda las victorias de la maquina
         var victoriasM by remember {
             mutableStateOf(0)
         }
+
+        //Variable remember que guarda las victorias del jugador
         var victoriasJ by remember {
             mutableStateOf(0)
         }
 
+        //Se comprueba si el jugador ha elegido ya
         if (turno) {
             
         } else {
+            //asigna un valor aleatorio a la eleccion de la maquina
             val aleat = (1..3).random()
             eleccionM = aleat
 
+            //Devuelve el turno al jugador
             turno = true
 
+            //Comprueba quien ha ganado la ronda, se informa mediante un toast y se añade a
+            //la variable del ganador
             if (eleccionJ == eleccionM) {
                 Toast.makeText(this,"Ronda empatada", Toast.LENGTH_SHORT).show()
             } else if (eleccionM == 2 && eleccionJ == 3) {
@@ -118,6 +128,7 @@ class MainActivity : ComponentActivity() {
 
         }
 
+        //Cuando alguno de los dos llegue a 5, se informa el ganador
         if (victoriasJ == 5) {
             Toast.makeText(this,"Ha ganado el jugador", Toast.LENGTH_SHORT).show()
             victoriasJ = 0
@@ -139,6 +150,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1F)
+<<<<<<< HEAD
                     .rotate(180F)
 
             ) {
@@ -149,6 +161,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 )
 
+=======
+                    .background(Color.Gray)
+                    .rotate(180F)
+            ) {
+
+                Image(painter = painterResource(id = R.drawable.fondocespes),
+                    contentDescription = "fondo",
+                    contentScale = ContentScale.FillBounds)
+>>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
 
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -178,6 +199,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1F)
+<<<<<<< HEAD
                     .background(Color.Green)
             ) {
 
@@ -187,23 +209,38 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 )
 
+=======
+                    .background(Color.Gray)
+            ) {
+                Image(painter = painterResource(id = R.drawable.fondonthe),
+                    contentDescription = "fondo",
+                    contentScale = ContentScale.FillBounds)
+>>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+
                     Image(
+                        //recoge la foto de la lista segun la seleccion
                         painter = painterResource(id = lista[eleccionJ]),
                         contentDescription = "tijeras",
                         Modifier.size(120.dp,120.dp)
                     )
                     Image(
+<<<<<<< HEAD
                         painter = painterResource(id = R.drawable.espdita),
                         contentDescription = "vs",
+=======
+                        painter = painterResource(id = R.drawable.espada),
+                        contentDescription = "espada",
+>>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
                         Modifier.size(120.dp,120.dp)
                     )
 
                     Image(
+                        //recoge la foto de la lista segun la seleccion
                         painter = painterResource(id = lista[eleccionM]),
                         contentDescription = "papel",
                         Modifier.size(120.dp,120.dp)
@@ -216,6 +253,7 @@ class MainActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+<<<<<<< HEAD
                     .background(Color.Blue)
                     .weight(1F)
             ) {
@@ -224,6 +262,16 @@ class MainActivity : ComponentActivity() {
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.fillMaxSize()
                 )
+=======
+                    .weight(1F)
+                    .background(Color.Gray)
+
+            ) {
+
+                Image(painter = painterResource(id = R.drawable.fondocespes),
+                    contentDescription = "fondo",
+                    contentScale = ContentScale.FillBounds)
+>>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -234,6 +282,8 @@ class MainActivity : ComponentActivity() {
                         contentDescription = "piedra",
                         Modifier
                             .size(120.dp, 120.dp)
+                            //Al pulsar, se le asigna un valor a la eleccion del jugador y se acaba
+                            //el turno
                             .clickable {
                                 if (turno) {
                                     eleccionJ = 1
@@ -245,6 +295,8 @@ class MainActivity : ComponentActivity() {
                         contentDescription = "tijeras",
                         Modifier
                             .size(120.dp, 120.dp)
+                            //Al pulsar, se le asigna un valor a la eleccion del jugador y se acaba
+                            //el turno
                             .clickable {
                                 if (turno) {
                                     eleccionJ = 2
@@ -257,6 +309,8 @@ class MainActivity : ComponentActivity() {
                         contentDescription = "papel",
                         Modifier
                             .size(120.dp, 120.dp)
+                            //Al pulsar, se le asigna un valor a la eleccion del jugador y se acaba
+                            //el turno
                             .clickable {
                                 if (turno) {
                                     eleccionJ = 3

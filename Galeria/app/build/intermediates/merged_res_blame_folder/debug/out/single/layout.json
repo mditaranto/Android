@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.example.galeria.app-mergeDebugResources-47:/layout/fotos.xml",
+        "source": "com.example.galeria.app-main-50:/layout/fotos.xml"
+    },
+    {
+        "merged": "com.example.galeria.app-mergeDebugResources-47:/layout/fotos_item.xml",
+        "source": "com.example.galeria.app-main-50:/layout/fotos_item.xml"
+    },
+    {
+        "merged": "com.example.galeria.app-mergeDebugResources-47:/layout/activity_main.xml",
+        "source": "com.example.galeria.app-main-50:/layout/activity_main.xml"
+    }
+]
