@@ -1,5 +1,6 @@
 package com.example.piedrapapelotijeras
 
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.StructuredName
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,7 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -133,9 +138,18 @@ class MainActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(partHeight)
-                    .background(Color.Gray)
+                    .weight(1F)
+                    .rotate(180F)
+
             ) {
+
+                Image(painter = painterResource(id = R.drawable.cespedfondo),
+                    contentDescription = "fondo",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -163,9 +177,16 @@ class MainActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(partHeight)
+                    .weight(1F)
                     .background(Color.Green)
             ) {
+
+                Image(painter = painterResource(id = R.drawable.netherrackfondo),
+                    contentDescription = "fondo",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -177,10 +198,11 @@ class MainActivity : ComponentActivity() {
                         Modifier.size(120.dp,120.dp)
                     )
                     Image(
-                        painter = painterResource(id = R.drawable.vs),
+                        painter = painterResource(id = R.drawable.espdita),
                         contentDescription = "vs",
                         Modifier.size(120.dp,120.dp)
                     )
+
                     Image(
                         painter = painterResource(id = lista[eleccionM]),
                         contentDescription = "papel",
@@ -194,9 +216,14 @@ class MainActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(partHeight)
                     .background(Color.Blue)
+                    .weight(1F)
             ) {
+                Image(painter = painterResource(id = R.drawable.cespedfondo),
+                    contentDescription = "fondo",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
