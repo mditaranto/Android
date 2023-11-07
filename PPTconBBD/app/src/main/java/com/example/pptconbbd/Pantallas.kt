@@ -30,7 +30,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.pptconbbd.entidades.UsuarioEntity
 import com.example.pptconbbd.ui.theme.PPTconBBDTheme
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -138,7 +141,12 @@ fun Juego(navController: NavController, modifier: Modifier = Modifier) {
     //Cuando la maquina gane 3 veces, se acabo
     if (victoriasM == 3) {
         Toast.makeText(contexto,"Se acabo la partida", Toast.LENGTH_SHORT).show()
+        addUsuario(UsuarioEntity("hola", victoriasJ))
+
+
         navController.navigate("Login")
+
+
     }
 
     Column(
@@ -280,4 +288,9 @@ fun Juego(navController: NavController, modifier: Modifier = Modifier) {
         }
     }
 }
+fun addUsuario(usuario: UsuarioEntity)= runBlocking{  // Corrutina que añade una tarea a la lista
+    launch {
+        val id = MainActivity.database.UsuarioDao().addUsuario(usuario)   // Inserta una tarea nueva
 
+    }
+}

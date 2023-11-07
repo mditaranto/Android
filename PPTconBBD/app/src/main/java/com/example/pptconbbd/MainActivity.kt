@@ -20,12 +20,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 
 import com.example.pptconbbd.ui.theme.PPTconBBDTheme
 
 class MainActivity : ComponentActivity() {
+
+    companion object {
+        lateinit var database: UsuariosDatabase
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        database =
+            Room.databaseBuilder(this, UsuariosDatabase::class.java, "usuarios-db").build()
+
         setContent {
             val navController = rememberNavController()
             var modifier = Modifier
