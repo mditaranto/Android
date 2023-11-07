@@ -31,10 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-<<<<<<< HEAD
-import androidx.compose.ui.draw.paint
-=======
->>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -99,7 +95,7 @@ class MainActivity : ComponentActivity() {
 
         //Se comprueba si el jugador ha elegido ya
         if (turno) {
-            
+
         } else {
             //asigna un valor aleatorio a la eleccion de la maquina
             val aleat = (1..3).random()
@@ -150,18 +146,6 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1F)
-<<<<<<< HEAD
-                    .rotate(180F)
-
-            ) {
-
-                Image(painter = painterResource(id = R.drawable.cespedfondo),
-                    contentDescription = "fondo",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-
-=======
                     .background(Color.Gray)
                     .rotate(180F)
             ) {
@@ -169,7 +153,6 @@ class MainActivity : ComponentActivity() {
                 Image(painter = painterResource(id = R.drawable.fondocespes),
                     contentDescription = "fondo",
                     contentScale = ContentScale.FillBounds)
->>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
 
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -199,23 +182,11 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1F)
-<<<<<<< HEAD
-                    .background(Color.Green)
-            ) {
-
-                Image(painter = painterResource(id = R.drawable.netherrackfondo),
-                    contentDescription = "fondo",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-
-=======
                     .background(Color.Gray)
             ) {
                 Image(painter = painterResource(id = R.drawable.fondonthe),
                     contentDescription = "fondo",
                     contentScale = ContentScale.FillBounds)
->>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -229,16 +200,10 @@ class MainActivity : ComponentActivity() {
                         Modifier.size(120.dp,120.dp)
                     )
                     Image(
-<<<<<<< HEAD
-                        painter = painterResource(id = R.drawable.espdita),
-                        contentDescription = "vs",
-=======
                         painter = painterResource(id = R.drawable.espada),
                         contentDescription = "espada",
->>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
                         Modifier.size(120.dp,120.dp)
                     )
-
                     Image(
                         //recoge la foto de la lista segun la seleccion
                         painter = painterResource(id = lista[eleccionM]),
@@ -253,16 +218,6 @@ class MainActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-<<<<<<< HEAD
-                    .background(Color.Blue)
-                    .weight(1F)
-            ) {
-                Image(painter = painterResource(id = R.drawable.cespedfondo),
-                    contentDescription = "fondo",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-=======
                     .weight(1F)
                     .background(Color.Gray)
 
@@ -271,7 +226,6 @@ class MainActivity : ComponentActivity() {
                 Image(painter = painterResource(id = R.drawable.fondocespes),
                     contentDescription = "fondo",
                     contentScale = ContentScale.FillBounds)
->>>>>>> 2b9478eb06894b508391ae6a7ccf2196a6af79b5
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -324,8 +278,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-
 
         @Preview(showBackground = true)
         @Composable
