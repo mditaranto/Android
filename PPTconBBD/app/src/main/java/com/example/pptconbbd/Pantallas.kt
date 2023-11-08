@@ -50,14 +50,23 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
+/**
+ * Funcion compose del login
+ * Recibe como parametro un navController
+ * Muestra una pantalla de Login donde puedes inserar un usuario
+ * Con un boton navega a la pantalla de juego pasando como parametro el usuario
+ * Con un boton navega a la pantalla de estadisticas
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navController: NavController) {
 
+    //Variable donde se guarda el usuario
     var usuario by rememberSaveable {
         mutableStateOf("")
     }
 
+    //Estructura de la vista
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -79,7 +88,8 @@ fun Login(navController: NavController) {
             horizontalArrangement = Arrangement.Center) {
             
             Button(onClick = {
-                navController.navigate("Juego/$usuario")
+                //Navega hasta Juego
+                navController.navigate("Juego/$usuario")//la variable que se pasa como parametro a la otra vista
             }) {
                 Text("Jugar")}
         }
@@ -89,6 +99,7 @@ fun Login(navController: NavController) {
             horizontalArrangement = Arrangement.Center) {
 
             Button(onClick = {
+                //Navega hasta Estadisticas
                 navController.navigate("Estadisticas")
             }) {
                 Text("Estadisticas")}
@@ -96,6 +107,12 @@ fun Login(navController: NavController) {
     }
 }
 
+/**
+ * Funcion compose del login
+ * Recibe como parametro un navController
+ * Muestra la pantalla de un Piedra, papel y tijeras
+ * Al perder se vuelve a la vista Login
+ */
 @Composable
 fun Juego(navController: NavController, user: String) {
     //Lista donde guardo las fotos que voy a utilizar
@@ -106,7 +123,10 @@ fun Juego(navController: NavController, user: String) {
         R.drawable.papel
     )
 
+    //Contexto
     val contexto = LocalContext.current
+
+    //Variable para guardas las partidas totales jugadas
     var partidas by remember {
         mutableStateOf(0)
     }
@@ -143,6 +163,7 @@ fun Juego(navController: NavController, user: String) {
         //asigna un valor aleatorio a la eleccion de la maquina
         val aleat = (1..3).random()
         eleccionM = aleat
+        //Se suma 1 a las partidas
         partidas += 1
         //Devuelve el turno al jugador
         turno = true
@@ -165,6 +186,8 @@ fun Juego(navController: NavController, user: String) {
             victoriasJ += 1
         }
 
+        //Cuando la maquina gana 3 veces, se informa del fin
+        //Se añade el jugador a la BBD y se navega al login
         if (victoriasM == 3) {
             Toast.makeText(contexto,"Se acabo la partida", Toast.LENGTH_SHORT).show()
             addUsuario(UsuarioEntity(username = user, victorias = victoriasJ, partidas = partidas))
@@ -175,9 +198,7 @@ fun Juego(navController: NavController, user: String) {
 
     }
 
-    //Cuando la maquina gane 3 veces, se acabo
-
-
+    //Estructura de la vista
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -318,25 +339,34 @@ fun Juego(navController: NavController, user: String) {
     }
 }
 
-
+/**
+ * Funcion compose de las estadisticas
+ * Recibe como parametro un navController
+ * Muestra la pantalla de una lista de los mejores 5 jugadores
+ * con un boton vuelve a la vista Login
+ */
 @Composable
 fun Estadisticas(navController: NavController) {
-
+    //Variable que guarda el get de los usuarios
     var lista by remember { mutableStateOf<List<UsuarioEntity>>(emptyList()) }
 
+    //Con una Corroutina damos valor a la variable usuarios
     LaunchedEffect(Unit) {
         val usuarios = withContext(Dispatchers.IO) {
+            //Get de los usuarios
             MainActivity.database.UsuarioDao().getAllUsuario()
         }
         lista = usuarios
     }
 
+    //Imagen de fondo
     Image(painter = painterResource(id = R.drawable.fondolista), contentDescription = "Fondo",
         modifier = Modifier.fillMaxSize())
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        //Row superior
         Row (modifier = Modifier.fillMaxWidth()){
             Column (modifier = Modifier.weight(1f)){
                 Text(text = "Usuario  ", fontSize = 30.sp)
@@ -350,8 +380,11 @@ fun Estadisticas(navController: NavController) {
 
         }
 
+        //Para los usuarios de la lista
         for (a in lista) {
+            var contador = 0
             // Contenido centrado verticalmente
+            // Creamos un row con 3 columnas donde iran cada uno de los valores
             Row(
                 modifier = Modifier
                     .weight(1f) // Ocupa el espacio vertical en el centro
@@ -380,7 +413,9 @@ fun Estadisticas(navController: NavController) {
 
                     }
 
+                contador += 1
             }
+
         }
 
         // Botón abajo a la derecha
@@ -392,6 +427,7 @@ fun Estadisticas(navController: NavController) {
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.Bottom
         ) {
+            //Navega a la vista Login
             Button(onClick = { navController.navigate("Login") }) {
                 Text(text = "Volver")
             }
@@ -401,9 +437,14 @@ fun Estadisticas(navController: NavController) {
     }
 
 
-fun addUsuario(usuario: UsuarioEntity)= runBlocking{  // Corrutina que añade una tarea a la lista
+/**
+ * Funcion que agrega un usuario a la BBD
+ * Tiene como parametros de entrada un objeto de tipo UsuarioEntity
+ * Hace un Insert en la BBD con una corroutina
+ */
+fun addUsuario(usuario: UsuarioEntity)= runBlocking{  // Corrutina que añade un usuario
     launch {
-        val id = MainActivity.database.UsuarioDao().addUsuario(usuario)   // Inserta una tarea nueva
+        val id = MainActivity.database.UsuarioDao().addUsuario(usuario)   // Inserta un usuario nuevo
 
     }
 }
