@@ -89,6 +89,10 @@ fun Login(navController: NavController) {
             
             Button(onClick = {
                 //Navega hasta Juego
+                //En caso de estar vacio, se establece el valor "Invitado"
+                if (usuario.isEmpty()) {
+                    usuario = "Invitado"
+                }
                 navController.navigate("Juego/$usuario")//la variable que se pasa como parametro a la otra vista
             }) {
                 Text("Jugar")}
