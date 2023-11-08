@@ -417,7 +417,7 @@ fun Estadisticas(navController: NavController) {
 
                     }
 
-                contador += 1
+
             }
 
         }
