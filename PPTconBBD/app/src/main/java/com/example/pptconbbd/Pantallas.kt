@@ -59,7 +59,7 @@ import kotlinx.coroutines.withContext
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(navController: NavController) {
+private fun Login(navController: NavController) {
 
     //Variable donde se guarda el usuario
     var usuario by rememberSaveable {
