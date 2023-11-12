@@ -14,10 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.room.Room
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.agendaconbbd.Entity.ContactosEntity
 import com.example.agendaconbbd.ui.theme.AgendaConBBDTheme
 
 class MainActivity : ComponentActivity() {
@@ -44,11 +47,15 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //Vista Login
                     composable(route = "ListaContactos") { ListaContactos(navController) }
-                    composable(route = "AñadirContacto") { AñadirContacto(navController)}
+                    composable(route = "AñadirContacto") { AñadirContacto(navController) }
+                    composable(route = "editarContacto/{id}", arguments = listOf(navArgument("id") {
+                        type = NavType.LongType
+                    })) {
+                        editarContacto(navController, it.arguments?.getLong("id") ?: 1)
+                    }
                 }
             }
         }
     }
 }
-
 

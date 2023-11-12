@@ -44,6 +44,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
+/**
+ * Vista de los contactos
+ * Tiene un boton para añadir un contacto
+ * Tiene un boton para modificar un contacto
+ */
 @Composable
 fun ListaContactos(navController: NavController) {
     //Variable que guarda el get de los usuarios
@@ -59,23 +64,50 @@ fun ListaContactos(navController: NavController) {
     }
 
     Column {
+        Row {
+            Button(onClick = { navController.navigate("AñadirContacto") }) {
+                Text(text = "Añadir contacto")
+            }
+        }
         LazyColumn() {
             for (a in lista)
-            items(1) {
-                Row {
-                    Image(painter = painterResource(FotoContacto(a)), contentDescription = "")
-                    Text(a.name + " " +a.tlfno)
+                items(1) {
+                Row (verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center){
+                    Image(painter = painterResource(FotoContacto(a)), contentDescription = "",
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(100.dp))
+                    Text(a.name + " " + a.tlfno)
+                    Spacer(modifier = Modifier.size(30.dp))
+                    Button(onClick = { navController.navigate("editarContacto/${a.id.toLong()}") }, modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp)) {
+                        Image(painter = painterResource(id = R.drawable.editar),
+                            contentDescription = "editar")
+                    }
+
+
+                    Spacer(modifier = Modifier.size(30.dp))
+                    Image(painter = painterResource(id = R.drawable.eliminar),
+                        contentDescription = "borrar",
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(40.dp))
+
                 }
-                Image(painter = painterResource(FotoContacto(a)), contentDescription = "")
             }
         }
 
-        Button(onClick = { navController.navigate("AñadirContacto") }) {
-            Text(text = "Añadir contacto")
-        }
+
     }
 }
 
+/**
+ * Vista de añadir un contacto
+ * Boton para volver atras
+ * Boton para añadir
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AñadirContacto(navController: NavController) {
@@ -97,7 +129,7 @@ fun AñadirContacto(navController: NavController) {
             Button(onClick = { navController.navigate("ListaContactos") }, modifier = Modifier
                 .width(50.dp)
                 .height(50.dp)) {
-                Image(painter = painterResource(id = R.drawable.cerrar), contentDescription = "Cerrar")
+                Image(painter = painterResource(id = R.drawable.mujer), contentDescription = "Cerrar")
             }
             Text(text = "Crear contacto", fontSize = 25.sp, modifier = Modifier.padding(35.dp,5.dp,35.dp,0.dp))
             Button(onClick = { addContacto(ContactosEntity(name = nombre, tlfno = telef, generoMasc = genero ))}, ) {
@@ -140,6 +172,92 @@ fun AñadirContacto(navController: NavController) {
 
 }
 
+/**
+ * Vista que edita un contacto
+ * Boton para volver atras
+ * Boton para guardar
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun editarContacto(navController: NavController, id: Long) {
+
+    var contacto by remember {
+        mutableStateOf(ContactosEntity(1,"a","a",true))
+    }
+    LaunchedEffect(Unit) {
+        val contac = withContext(Dispatchers.IO) {
+           MainActivity.database.ContactosDao().getContactosById(id)    // Se carga la lista de tareas
+        }
+        contacto.id = contac.id
+        contacto.name = contac.name
+        contacto.tlfno = contac.tlfno
+        contacto.generoMasc = contac.generoMasc
+        // se pasa la lista a la Vista
+    }
+
+    var nombre by remember {
+        mutableStateOf(contacto.name)
+    }
+
+    var telef by remember {
+        mutableStateOf(contacto.tlfno)
+    }
+
+    var genero by remember {
+        mutableStateOf(contacto.generoMasc)
+    }
+
+    Column (modifier = Modifier.fillMaxSize()){
+
+        Row (verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Center){
+            Button(onClick = { navController.navigate("ListaContactos") }, modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)) {
+                Image(painter = painterResource(id = R.drawable.cerrar), contentDescription = "Cerrar")
+            }
+            Text(text = "Editar contacto", fontSize = 25.sp, modifier = Modifier.padding(35.dp,5.dp,35.dp,0.dp))
+            Button(onClick = { updateContacto(ContactosEntity(id = id.toInt(), name = nombre,
+                tlfno = telef, generoMasc = genero )) }, ) {
+                Text(text = "Guardar")
+            }
+        }
+
+        Column (verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()){
+
+            OutlinedTextField(value = nombre,
+                onValueChange = { nombre = it },
+                label = { Text("Usuario") })
+            Spacer(modifier = Modifier.height(50.dp))
+
+            OutlinedTextField(value = telef,
+                onValueChange = { telef = it },
+                label = { Text("Telefono") })
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Mujer")
+                Switch(
+                    checked = genero,
+                    onCheckedChange = {
+                        genero = it
+                    },
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+                Text("Hombre")
+            }
+        }
+
+    }
+}
+
+
 /*
 fun clearFocus(){
     findViewById<EditText>(R.id.etTask).setText("") // Borra el texto en el EditText
@@ -150,13 +268,10 @@ fun Context.hideKeyboard() {    // Oculta el teclado de texto
     inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 }
 
-fun getTasks()= runBlocking {       // Corrutina que saca de la base de datos la lista de tareas
-    launch {                        // Inicio del hilo
-        tasks = MisNotasApp.database.taskDao().getAllTasks()    // Se carga la lista de tareas
-        setUpRecyclerView(tasks)        // se pasa la lista a la Vista
-    }
-}
-*/
+
+ */
+
+
 fun addContacto(contac: ContactosEntity)= runBlocking{  // Corrutina que añade una tarea a la lista
     launch {
         val id = MainActivity.database.ContactosDao().addContactos(contac)   // Inserta una tarea nueva
@@ -164,14 +279,13 @@ fun addContacto(contac: ContactosEntity)= runBlocking{  // Corrutina que añade 
         //hideKeyboard()      // y se oculta el teclado
     }
 }
-/*
-fun updateTask(task: TaskEntity) = runBlocking{
+
+fun updateContacto(contac: ContactosEntity) = runBlocking{
     launch {
-        task.isDone = !task.isDone  // Marca o desmarca el checkbox
-        MisNotasApp.database.taskDao().updateTask(task) // Actualiza en la base de datos
+        MainActivity.database.ContactosDao().updateContactos(contac) // Actualiza en la base de datos
     }
 }
-
+/*
 fun deleteTask(task: TaskEntity)= runBlocking{
     launch {
         val position = tasks.indexOf(task)  // Busca la posición de la tarea en la lista...
