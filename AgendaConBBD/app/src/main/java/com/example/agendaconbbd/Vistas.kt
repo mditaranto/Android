@@ -1,16 +1,14 @@
 package com.example.agendaconbbd
 
-import android.app.Activity
-import android.app.ZygotePreload
-import android.content.Context
-import android.media.Image
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,14 +16,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +52,8 @@ import kotlinx.coroutines.withContext
  * Tiene un boton para añadir un contacto
  * Tiene un boton para modificar un contacto
  */
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListaContactos(navController: NavController) {
     //Variable que guarda el get de los usuarios
@@ -63,44 +68,89 @@ fun ListaContactos(navController: NavController) {
         lista = contactos
     }
 
-    Column {
-        Row {
-            Button(onClick = { navController.navigate("AñadirContacto") }) {
-                Text(text = "Añadir contacto")
+    Scaffold (Modifier.fillMaxSize(),
+        floatingActionButton = {
+            FloatingActionButton(onClick = {navController.navigate("AñadirContacto")},
+                containerColor = Color.Transparent,
+                contentColor = Color.Black,
+                shape = CircleShape,
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = 5.dp, pressedElevation = 0.dp)
+            ) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "")
             }
-        }
-        LazyColumn() {
-            for (a in lista)
-                items(1) {
-                Row (verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center){
-                    Image(painter = painterResource(FotoContacto(a)), contentDescription = "",
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(100.dp))
-                    Text(a.name + " " + a.tlfno)
-                    Spacer(modifier = Modifier.size(30.dp))
-                    Button(onClick = { navController.navigate("editarContacto/${a.id.toLong()}") }, modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp)) {
-                        Image(painter = painterResource(id = R.drawable.editar),
-                            contentDescription = "editar")
-                    }
+        }){
 
-
-                    Spacer(modifier = Modifier.size(30.dp))
-                    Image(painter = painterResource(id = R.drawable.eliminar),
-                        contentDescription = "borrar",
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(40.dp))
-
+        Column {
+            Row (
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.LightGray),
+                horizontalArrangement = Arrangement.Center){
+                Text("Contactos", fontSize = 50.sp)
                 }
+            LazyColumn {
+                for (a in lista)
+                    items(1) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Row (Modifier.weight(1F)){
+                                Image(
+                                    painter = painterResource(fotoContacto(a)), contentDescription = "",
+                                    Modifier
+                                        .width(90.dp)
+                                        .height(90.dp)
+
+                                )
+
+                                Column {
+                                    Row {
+                                        Text(a.name, fontSize = 30.sp)
+                                    }
+                                    Row {
+                                        Text(a.tlfno, fontSize = 20.sp)
+                                    }
+                                }
+                            }
+
+                            Spacer(Modifier.size(30.dp))
+
+                            Row(horizontalArrangement = Arrangement.End) {
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.editar),
+                                    contentDescription = "editar",
+                                    modifier = Modifier
+                                        .width(50.dp)
+                                        .height(50.dp)
+                                        .clickable { navController.navigate("editarContacto/${a.id}") }
+                                )
+
+
+                                Spacer(Modifier.size(10.dp))
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.eliminar),
+                                    contentDescription = "borrar",
+                                    modifier = Modifier
+                                        .width(50.dp)
+                                        .height(50.dp)
+                                        .clickable { deleteContacto(a); navController.navigate("ListaContactos") }
+                                )
+
+                            }
+
+                            Spacer(Modifier.size(30.dp))
+                        }
+                    }
             }
+
+
         }
-
-
     }
+
 }
 
 /**
@@ -123,21 +173,53 @@ fun AñadirContacto(navController: NavController) {
         mutableStateOf(true)
     }
 
-    Column (modifier = Modifier.fillMaxSize()){
+    Column(modifier = Modifier.fillMaxSize()) {
 
-        Row (verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Center){
-            Button(onClick = { navController.navigate("ListaContactos") }, modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)) {
-                Image(painter = painterResource(id = R.drawable.mujer), contentDescription = "Cerrar")
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 5.dp, end = 5.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.cerrar),
+                    contentDescription = "Cerrar",
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .clickable { navController.navigate("ListaContactos") }
+                )
             }
-            Text(text = "Crear contacto", fontSize = 25.sp, modifier = Modifier.padding(35.dp,5.dp,35.dp,0.dp))
-            Button(onClick = { addContacto(ContactosEntity(name = nombre, tlfno = telef, generoMasc = genero ))}, ) {
-                Text(text = "Guardar")
+
+                Text(
+                    text = "Crear contacto",
+                    fontSize = 25.sp
+                )
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 5.dp, start = 5.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Image(painter = painterResource(id = R.drawable.guardar), contentDescription = "guardar",
+                    Modifier.padding(end= 5.dp)
+                        .height(60.dp)
+                        .width(60.dp)
+                        .clickable { addContacto(ContactosEntity(name = nombre, tlfno = telef, generoMasc = genero))
+                        navController.navigate("ListaContactos")})
             }
         }
 
-        Column (verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()){
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
 
             OutlinedTextField(value = nombre,
                 onValueChange = { nombre = it },
@@ -179,52 +261,77 @@ fun AñadirContacto(navController: NavController) {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun editarContacto(navController: NavController, id: Long) {
-
-    var contacto by remember {
-        mutableStateOf(ContactosEntity(1,"a","a",true))
-    }
-    LaunchedEffect(Unit) {
-        val contac = withContext(Dispatchers.IO) {
-           MainActivity.database.ContactosDao().getContactosById(id)    // Se carga la lista de tareas
-        }
-        contacto.id = contac.id
-        contacto.name = contac.name
-        contacto.tlfno = contac.tlfno
-        contacto.generoMasc = contac.generoMasc
-        // se pasa la lista a la Vista
-    }
+fun EditarContacto(navController: NavController, id: Long) {
 
     var nombre by remember {
-        mutableStateOf(contacto.name)
+        mutableStateOf("")
     }
 
     var telef by remember {
-        mutableStateOf(contacto.tlfno)
+        mutableStateOf("")
     }
 
     var genero by remember {
-        mutableStateOf(contacto.generoMasc)
+        mutableStateOf(true)
     }
 
-    Column (modifier = Modifier.fillMaxSize()){
+    LaunchedEffect(Unit) {
+        val contac = withContext(Dispatchers.IO) {
+            MainActivity.database.ContactosDao()
+                .getContactosById(id)    // Se carga la lista de tareas
+        }
+        nombre = contac.name
+        telef = contac.tlfno
+        genero = contac.generoMasc
+    }
 
-        Row (verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Center){
-            Button(onClick = { navController.navigate("ListaContactos") }, modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)) {
-                Image(painter = painterResource(id = R.drawable.cerrar), contentDescription = "Cerrar")
+    Column(modifier = Modifier.fillMaxSize()) {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 5.dp, end = 5.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.cerrar),
+                    contentDescription = "Cerrar",
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .clickable { navController.navigate("ListaContactos") }
+                )
             }
-            Text(text = "Editar contacto", fontSize = 25.sp, modifier = Modifier.padding(35.dp,5.dp,35.dp,0.dp))
-            Button(onClick = { updateContacto(ContactosEntity(id = id.toInt(), name = nombre,
-                tlfno = telef, generoMasc = genero )) }, ) {
-                Text(text = "Guardar")
+
+            Text(
+                text = "Editar contacto",
+                fontSize = 25.sp
+            )
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 5.dp, start = 5.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Image(painter = painterResource(id = R.drawable.guardar), contentDescription = "guardar",
+                    Modifier.padding(end= 5.dp)
+                        .height(60.dp)
+                        .width(60.dp)
+                        .clickable { updateContacto(ContactosEntity(id.toInt(),name = nombre, tlfno = telef, generoMasc = genero))
+                            navController.navigate("ListaContactos")})
             }
         }
 
-        Column (verticalArrangement = Arrangement.Center,
+        Column(
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()){
+            modifier = Modifier.fillMaxSize()
+        ) {
 
             OutlinedTextField(value = nombre,
                 onValueChange = { nombre = it },
@@ -255,54 +362,52 @@ fun editarContacto(navController: NavController, id: Long) {
         }
 
     }
-}
 
+}
 
 /*
 fun clearFocus(){
-    findViewById<EditText>(R.id.etTask).setText("") // Borra el texto en el EditText
+	findViewById<EditText>(R.id.etTask).setText("") // Borra el texto en el EditText
 }
 
 fun Context.hideKeyboard() {    // Oculta el teclado de texto
-    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+	val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+	inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 }
 
 
  */
 
 
-fun addContacto(contac: ContactosEntity)= runBlocking{  // Corrutina que añade una tarea a la lista
+fun addContacto(contac: ContactosEntity) =
+    runBlocking {  // Corrutina que añade una tarea a la lista
+        launch {
+            MainActivity.database.ContactosDao()
+                .addContactos(contac)   // Inserta una tarea nueva
+        }
+    }
+
+fun updateContacto(contac: ContactosEntity) = runBlocking {
     launch {
-        val id = MainActivity.database.ContactosDao().addContactos(contac)   // Inserta una tarea nueva
-        //clearFocus()        // Se elimina el texto del et ...
-        //hideKeyboard()      // y se oculta el teclado
+        MainActivity.database.ContactosDao()
+            .updateContactos(contac) // Actualiza en la base de datos
     }
 }
 
-fun updateContacto(contac: ContactosEntity) = runBlocking{
+fun deleteContacto(contac: ContactosEntity) = runBlocking {
     launch {
-        MainActivity.database.ContactosDao().updateContactos(contac) // Actualiza en la base de datos
+        MainActivity.database.ContactosDao()
+            .deleteContactos(contac) // ... y la borra de la base de datos.
     }
 }
-/*
-fun deleteTask(task: TaskEntity)= runBlocking{
-    launch {
-        val position = tasks.indexOf(task)  // Busca la posición de la tarea en la lista...
-        MisNotasApp.database.taskDao().deleteTask(task) // ... y la borra de la base de datos.
-        tasks.remove(task)      // Finalmente, la elimina de la lista
-        adapter.notifyItemRemoved(position) // El adaptador notifica que se ha eliminado la tarea
-    }
-}
- */
 
-fun FotoContacto(contac: ContactosEntity): Int {
 
-    var imagen = 0
-    if (contac.generoMasc) {
-        imagen = R.drawable.hombre
+fun fotoContacto(contac: ContactosEntity): Int {
+
+    val imagen = if (contac.generoMasc) {
+        R.drawable.hombre
     } else {
-        imagen = R.drawable.mujer
+        R.drawable.mujer
     }
     return imagen
 }
