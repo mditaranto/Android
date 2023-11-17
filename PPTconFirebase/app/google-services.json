@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "272131542788",
-    "project_id": "pptconbbd",
-    "storage_bucket": "pptconbbd.appspot.com"
+    "project_number": "569101183493",
+    "project_id": "chulo-8b036",
+    "storage_bucket": "chulo-8b036.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:272131542788:android:f81cb761293bdd5753ca51",
+        "mobilesdk_app_id": "1:569101183493:android:07542377e706562a174a6c",
         "android_client_info": {
           "package_name": "com.example.piedrapapelotijeras"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD__iv3Rx8ijabomf0rVD203kDvYuPLtGQ"
+          "current_key": "AIzaSyCBvR6pzkia3ZZ2sEO7BkasM4mFPH7C9RI"
         }
       ],
       "services": {

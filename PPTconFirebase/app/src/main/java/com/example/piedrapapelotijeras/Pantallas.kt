@@ -1,4 +1,4 @@
-package com.example.pptconbbd
+package com.example.piedrapapelotijeras
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -33,10 +33,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.pptconbbd.entidades.UsuarioEntity
+import com.example.piedrapapelotijeras.Crud.Companion.createUsuario
+import com.example.piedrapapelotijeras.Crud.Companion.getContactos
+import com.example.piedrapapelotijeras.entity.UsuarioEntity
+import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 /**
@@ -48,7 +52,7 @@ import kotlinx.coroutines.withContext
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Login(navController: NavController) {
+public fun Login(navController: NavController, db: DatabaseReference) {
 
     //Variable donde se guarda el usuario
     var usuario by rememberSaveable {
@@ -59,7 +63,7 @@ private fun Login(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        )    {
+    )    {
 
         Row (modifier = Modifier,
             verticalAlignment = Alignment.CenterVertically,
@@ -69,13 +73,13 @@ private fun Login(navController: NavController) {
             OutlinedTextField(value = usuario,
                 onValueChange = { usuario = it },
                 label = { Text("Usuario") })
-            
+
         }
-        
+
         Row (modifier = Modifier,
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.Center) {
-            
+
             Button(onClick = {
                 //Navega hasta Juego
                 //En caso de estar vacio, se establece el valor "Invitado"
@@ -107,7 +111,7 @@ private fun Login(navController: NavController) {
  * Al perder se vuelve a la vista Login
  */
 @Composable
-fun Juego(navController: NavController, user: String) {
+fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
     //Lista donde guardo las fotos que voy a utilizar
     val lista = listOf(
         R.drawable.ic_launcher_foreground,
@@ -182,9 +186,9 @@ fun Juego(navController: NavController, user: String) {
         //Cuando la maquina gana 3 veces, se informa del fin
         //Se añade el jugador a la BBD y se navega al login
         if (victoriasM == 3) {
-            Toast.makeText(contexto,"Se acabo la partida", Toast.LENGTH_SHORT).show()
-            addUsuario(UsuarioEntity(username = user, victorias = victoriasJ, partidas = partidas))
             victoriasM = 0
+            Toast.makeText(contexto,"Se acabo la partida", Toast.LENGTH_SHORT).show()
+            createUsuario(UsuarioEntity(username = user, victorias = victoriasJ, partidas = partidas), db)
             navController.navigate("Login")
 
         }
@@ -339,23 +343,11 @@ fun Juego(navController: NavController, user: String) {
  * con un boton vuelve a la vista Login
  */
 @Composable
-fun Estadisticas(navController: NavController) {
+fun Estadisticas(navController: NavController,  db: DatabaseReference) {
     //Variable que guarda el get de los usuarios
-    var lista by remember { mutableStateOf<List<UsuarioEntity>>(emptyList()) }
-
-    //Con una Corroutina damos valor a la variable usuarios
-    LaunchedEffect(Unit) {
-        val usuarios = withContext(Dispatchers.IO) {
-            //Get de los usuarios
-            MainActivity.database.UsuarioDao().getAllUsuario()
-        }
-        lista = usuarios
-    }
+    val lista = getContactos(db)
 
     //Imagen de fondo
-    Image(painter = painterResource(id = R.drawable.fondolista), contentDescription = "Fondo",
-        modifier = Modifier.fillMaxSize())
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -373,42 +365,51 @@ fun Estadisticas(navController: NavController) {
 
         }
 
-        //Para los usuarios de la lista
-        for (a in lista) {
-            var contador = 0
-            // Contenido centrado verticalmente
-            // Creamos un row con 3 columnas donde iran cada uno de los valores
-            Row(
-                modifier = Modifier
-                    .weight(1f) // Ocupa el espacio vertical en el centro
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        lista.sortByDescending { it.victorias }
+        if (lista.isNotEmpty()) {
+            //Para los usuarios de la lista
+            for (i in 1..5 ) {
+                var contador = 0
+                // Contenido centrado verticalmente
+                // Creamos un row con 3 columnas donde iran cada uno de los valores
+                Row(
+                    modifier = Modifier
+                        .weight(1f) // Ocupa el espacio vertical en el centro
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Column(modifier = Modifier.weight(1f)) {
 
-                        val texto = "${a.username}"
+                        val texto = "${lista[i].username}"
                         Text(text = texto, fontSize = 30.sp)
 
                     }
 
                     Column(modifier = Modifier.weight(1f)) {
 
-                        val texto = "${a.partidas}"
+                        val texto = "${lista[i].partidas}"
                         Text(text = texto, fontSize = 30.sp)
 
                     }
 
                     Column(modifier = Modifier.weight(1f)) {
 
-                        val texto = "${a.victorias}"
+                        val texto = "${lista[i].victorias}"
                         Text(text = texto, fontSize = 30.sp)
 
                     }
 
+
+                }
 
             }
-
+        } else {
+            Column {
+                Row {
+                    Text("Vacio")
+                }
+            }
         }
 
         // Botón abajo a la derecha
@@ -427,18 +428,5 @@ fun Estadisticas(navController: NavController) {
         }
     }
 
-    }
-
-
-/**
- * Funcion que agrega un usuario a la BBD
- * Tiene como parametros de entrada un objeto de tipo UsuarioEntity
- * Hace un Insert en la BBD con una corroutina
- */
-fun addUsuario(usuario: UsuarioEntity)= runBlocking{  // Corrutina que añade un usuario
-    launch {
-        val id = MainActivity.database.UsuarioDao().addUsuario(usuario)   // Inserta un usuario nuevo
-
-    }
 }
 
