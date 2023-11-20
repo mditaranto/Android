@@ -29,7 +29,7 @@ class Crud {
 
                 }
             }
-
+            usuarios.sortByDescending { it.victorias }
             return usuarios
         }
 

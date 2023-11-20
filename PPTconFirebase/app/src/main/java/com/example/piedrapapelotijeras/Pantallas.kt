@@ -60,14 +60,17 @@ public fun Login(navController: NavController, db: DatabaseReference) {
     }
 
     //Estructura de la vista
-    Column(modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-    )    {
+    ) {
 
-        Row (modifier = Modifier,
+        Row(
+            modifier = Modifier,
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start) {
+            horizontalArrangement = Arrangement.Start
+        ) {
 
             Text(text = "usuario: ")
             OutlinedTextField(value = usuario,
@@ -76,9 +79,11 @@ public fun Login(navController: NavController, db: DatabaseReference) {
 
         }
 
-        Row (modifier = Modifier,
+        Row(
+            modifier = Modifier,
             verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Center) {
+            horizontalArrangement = Arrangement.Center
+        ) {
 
             Button(onClick = {
                 //Navega hasta Juego
@@ -88,18 +93,22 @@ public fun Login(navController: NavController, db: DatabaseReference) {
                 }
                 navController.navigate("Juego/$usuario")//la variable que se pasa como parametro a la otra vista
             }) {
-                Text("Jugar")}
+                Text("Jugar")
+            }
         }
 
-        Row (modifier = Modifier,
+        Row(
+            modifier = Modifier,
             verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.Center) {
+            horizontalArrangement = Arrangement.Center
+        ) {
 
             Button(onClick = {
                 //Navega hasta Estadisticas
                 navController.navigate("Estadisticas")
             }) {
-                Text("Estadisticas")}
+                Text("Estadisticas")
+            }
         }
     }
 }
@@ -111,7 +120,7 @@ public fun Login(navController: NavController, db: DatabaseReference) {
  * Al perder se vuelve a la vista Login
  */
 @Composable
-fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
+fun Juego(navController: NavController, user: String, db: DatabaseReference) {
     //Lista donde guardo las fotos que voy a utilizar
     val lista = listOf(
         R.drawable.ic_launcher_foreground,
@@ -168,18 +177,18 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
         //Comprueba quien ha ganado la ronda, se informa mediante un toast y se añade a
         //la variable del ganador
         if (eleccionJ == eleccionM) {
-            Toast.makeText(contexto,"Ronda empatada", Toast.LENGTH_SHORT).show()
+            Toast.makeText(contexto, "Ronda empatada", Toast.LENGTH_SHORT).show()
         } else if (eleccionM == 2 && eleccionJ == 3) {
-            Toast.makeText(contexto,"La maquina gana la ronda", Toast.LENGTH_SHORT).show()
+            Toast.makeText(contexto, "La maquina gana la ronda", Toast.LENGTH_SHORT).show()
             victoriasM += 1
         } else if (eleccionM == 3 && eleccionJ == 1) {
-            Toast.makeText(contexto,"La maquina gana la ronda", Toast.LENGTH_SHORT).show()
+            Toast.makeText(contexto, "La maquina gana la ronda", Toast.LENGTH_SHORT).show()
             victoriasM += 1
         } else if (eleccionM == 1 && eleccionJ == 2) {
-            Toast.makeText(contexto,"La maquina gana la ronda", Toast.LENGTH_SHORT).show()
+            Toast.makeText(contexto, "La maquina gana la ronda", Toast.LENGTH_SHORT).show()
             victoriasM += 1
         } else {
-            Toast.makeText(contexto,"El jugador gana la ronda", Toast.LENGTH_SHORT).show()
+            Toast.makeText(contexto, "El jugador gana la ronda", Toast.LENGTH_SHORT).show()
             victoriasJ += 1
         }
 
@@ -187,8 +196,14 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
         //Se añade el jugador a la BBD y se navega al login
         if (victoriasM == 3) {
             victoriasM = 0
-            Toast.makeText(contexto,"Se acabo la partida", Toast.LENGTH_SHORT).show()
-            createUsuario(UsuarioEntity(username = user, victorias = victoriasJ, partidas = partidas), db)
+            Toast.makeText(contexto, "Se acabo la partida", Toast.LENGTH_SHORT).show()
+            createUsuario(
+                UsuarioEntity(
+                    username = user,
+                    victorias = victoriasJ,
+                    partidas = partidas
+                ), db
+            )
             navController.navigate("Login")
 
         }
@@ -207,9 +222,11 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
                 .rotate(180F)
         ) {
 
-            Image(painter = painterResource(id = R.drawable.fondocespes),
+            Image(
+                painter = painterResource(id = R.drawable.fondocespes),
                 contentDescription = "fondo",
-                contentScale = ContentScale.FillBounds)
+                contentScale = ContentScale.FillBounds
+            )
 
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -219,17 +236,17 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
                 Image(
                     painter = painterResource(id = R.drawable.piedra),
                     contentDescription = "piedra",
-                    Modifier.size(120.dp,120.dp),
+                    Modifier.size(120.dp, 120.dp),
                 )
                 Image(
                     painter = painterResource(id = R.drawable.tijeras),
                     contentDescription = "tijeras",
-                    Modifier.size(120.dp,120.dp)
+                    Modifier.size(120.dp, 120.dp)
                 )
                 Image(
                     painter = painterResource(id = R.drawable.papel),
                     contentDescription = "papel",
-                    Modifier.size(120.dp,120.dp)
+                    Modifier.size(120.dp, 120.dp)
                 )
             }
         } // Contenido de la parte superior
@@ -241,9 +258,11 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
                 .weight(1F)
                 .background(Color.Gray)
         ) {
-            Image(painter = painterResource(id = R.drawable.fondonthe),
+            Image(
+                painter = painterResource(id = R.drawable.fondonthe),
                 contentDescription = "fondo",
-                contentScale = ContentScale.FillBounds)
+                contentScale = ContentScale.FillBounds
+            )
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -254,18 +273,18 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
                     //recoge la foto de la lista segun la seleccion
                     painter = painterResource(id = lista[eleccionJ]),
                     contentDescription = "tijeras",
-                    Modifier.size(120.dp,120.dp)
+                    Modifier.size(120.dp, 120.dp)
                 )
                 Image(
                     painter = painterResource(id = R.drawable.espada),
                     contentDescription = "espada",
-                    Modifier.size(120.dp,120.dp)
+                    Modifier.size(120.dp, 120.dp)
                 )
                 Image(
                     //recoge la foto de la lista segun la seleccion
                     painter = painterResource(id = lista[eleccionM]),
                     contentDescription = "papel",
-                    Modifier.size(120.dp,120.dp)
+                    Modifier.size(120.dp, 120.dp)
                 )
             }
 
@@ -280,9 +299,11 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
 
         ) {
 
-            Image(painter = painterResource(id = R.drawable.fondocespes),
+            Image(
+                painter = painterResource(id = R.drawable.fondocespes),
                 contentDescription = "fondo",
-                contentScale = ContentScale.FillBounds)
+                contentScale = ContentScale.FillBounds
+            )
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -343,7 +364,7 @@ fun Juego(navController: NavController, user: String,  db: DatabaseReference) {
  * con un boton vuelve a la vista Login
  */
 @Composable
-fun Estadisticas(navController: NavController,  db: DatabaseReference) {
+fun Estadisticas(navController: NavController, db: DatabaseReference) {
     //Variable que guarda el get de los usuarios
     val lista = getContactos(db)
 
@@ -352,58 +373,61 @@ fun Estadisticas(navController: NavController,  db: DatabaseReference) {
         modifier = Modifier.fillMaxSize()
     ) {
         //Row superior
-        Row (modifier = Modifier.fillMaxWidth()){
-            Column (modifier = Modifier.weight(1f)){
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = "Usuario  ", fontSize = 30.sp)
             }
-            Column (modifier = Modifier.weight(1f)){
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = "Partidas  ", fontSize = 30.sp)
             }
-            Column (modifier = Modifier.weight(1f)){
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = "Victorias  ", fontSize = 30.sp)
             }
 
         }
 
-        lista.sortByDescending { it.victorias }
         if (lista.isNotEmpty()) {
             //Para los usuarios de la lista
-            for (i in 1..5 ) {
-                var contador = 0
-                // Contenido centrado verticalmente
-                // Creamos un row con 3 columnas donde iran cada uno de los valores
-                Row(
-                    modifier = Modifier
-                        .weight(1f) // Ocupa el espacio vertical en el centro
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
+            var contador = 0
+            for (i in lista) {
+                if (contador < 5) {
+                    // Contenido centrado verticalmente
+                    // Creamos un row con 3 columnas donde iran cada uno de los valores
+                    Row(
+                        modifier = Modifier
+                            .weight(1f) // Ocupa el espacio vertical en el centro
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
 
-                        val texto = "${lista[i].username}"
-                        Text(text = texto, fontSize = 30.sp)
+                            val texto = "${i.username}"
+                            Text(text = texto, fontSize = 30.sp)
+
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+
+                            val texto = "${i.partidas}"
+                            Text(text = texto, fontSize = 30.sp)
+
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+
+                            val texto = "${i.victorias}"
+                            Text(text = texto, fontSize = 30.sp)
+
+                        }
+
 
                     }
-
-                    Column(modifier = Modifier.weight(1f)) {
-
-                        val texto = "${lista[i].partidas}"
-                        Text(text = texto, fontSize = 30.sp)
-
-                    }
-
-                    Column(modifier = Modifier.weight(1f)) {
-
-                        val texto = "${lista[i].victorias}"
-                        Text(text = texto, fontSize = 30.sp)
-
-                    }
-
-
+                    contador++
                 }
-
             }
+
+
         } else {
             Column {
                 Row {
