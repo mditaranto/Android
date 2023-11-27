@@ -55,13 +55,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun ImageWithClick() {
+    TODO("Not yet implemented")
+}
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Animalitos", color = Color.White) }) },
-        content = { MyContent() }
+        content = { ImageWithClick(); MyContent() }
     )
 }
 
