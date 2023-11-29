@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "598662049574",
+    "firebase_url": "https://whatsapp-gold-81590-default-rtdb.firebaseio.com",
+    "project_id": "whatsapp-gold-81590",
+    "storage_bucket": "whatsapp-gold-81590.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598662049574:android:7ac27473b8bdf763595be7",
+        "android_client_info": {
+          "package_name": "com.example.whatsappgold"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeuV5Em1m2wRugituBhg0TU9kfJI39hzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
