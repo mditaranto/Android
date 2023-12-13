@@ -22,6 +22,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.navigation.NavController
 import com.example.whatsappgold.Entity.UsuarioEntity
 import com.google.firebase.database.DatabaseReference
+import androidx.compose.foundation.Image
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun Chat(navController: NavController, dbUser: DatabaseReference) {
@@ -61,3 +64,27 @@ fun LoginScreen(navController: NavController, dbUser: DatabaseReference) {
     }
 }
 
+/**
+ * Loading screen for the app.
+ * It just contains the logo of the app for the time it's loading
+ */
+@Composable
+fun Loading(navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.android),
+            contentDescription = "Logo;Loading...",
+            modifier = Modifier
+                .fillMaxSize(0.6F)
+        )
+    }
+}
+
+@Composable
+fun chatList(navController: NavController, dbUser: DatabaseReference) {
+
+}

@@ -41,6 +41,9 @@ class MainActivity : ComponentActivity() {
                         composable("Chat") {
                             Chat(navController, dbUser)
                         }
+                        composable("Loading") {
+                            Loading(navController)
+                        }
                     }
                 }
             }
