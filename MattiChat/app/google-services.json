@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "550605684402",
+    "project_id": "whatsapp-13a64",
+    "storage_bucket": "whatsapp-13a64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550605684402:android:60f1748ae6cdd5c6f953ab",
+        "android_client_info": {
+          "package_name": "com.example.mattichat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrC2F4j3ze_asv5-rFQHuI9d3u90j_COQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
