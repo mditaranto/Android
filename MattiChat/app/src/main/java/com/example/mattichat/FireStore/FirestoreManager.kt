@@ -25,9 +25,10 @@ class FirestoreManager {
     @OptIn(DelicateCoroutinesApi::class)
     suspend fun login(userIn: User): Boolean {
         var logeado = CompletableDeferred<Boolean>()
-        val subscription = usersCollection.addSnapshotListener { snapshot, _ ->
+        val subscription = usersCollection.addSnapshotListener{ snapshot, _ ->
             snapshot?.let { querySnapshot ->
-                val userDocument = querySnapshot.documents.find { it.get("phoneNumber") == userIn.phoneNumber }
+                val userDocument = querySnapshot.documents.find {
+                    it.get("phoneNumber") == userIn.phoneNumber }
                 if (userDocument == null) {
                     GlobalScope.launch {
                         createUser(userIn)
@@ -47,7 +48,8 @@ class FirestoreManager {
 
     //Chats
     suspend fun createChat(chat: Chats, chats: List<Chats>) {
-        if (chats.find { (it.phone1 == chat.phone1 && it.phone2 == chat.phone2) || (it.phone1 == chat.phone2 && it.phone2 == chat.phone1) } == null) {
+        if (chats.find { (it.phone1 == chat.phone1 && it.phone2 == chat.phone2) ||
+                    (it.phone1 == chat.phone2 && it.phone2 == chat.phone1) } == null) {
             val alias1 = getAliasByPhone(chat.phone1!!)
             alias1.collect { alias1 ->
                 val alias2 = getAliasByPhone(chat.phone2!!)
@@ -115,7 +117,7 @@ class FirestoreManager {
     }
 
     fun getAllMessages(phone1: String, phone2: String): Flow<List<Mensajes>> = callbackFlow {
-        val msgCollection = firestore.collection("Mensajes")
+        val msgCollection = firestore.collection("Mensajes").orderBy("timestamp")
 
         val subscription = msgCollection.addSnapshotListener { snapshot, _ ->
             snapshot?.let { querySnapshot ->

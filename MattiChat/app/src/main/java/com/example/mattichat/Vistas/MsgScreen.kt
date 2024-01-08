@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -74,62 +77,65 @@ fun chatScreen(firestore: FirestoreManager, navController: NavController, userPh
             )
         },
         content = {
-            LazyColumn {
-                items(mensajes.size) { index ->
-                    val enviado = mensajes[index].telefonoSender == userPhone
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp)
-                    ) {
+            Column {
+                Spacer(modifier = Modifier.height(45.dp)) // Espacio entre el TopAppBar y el primer mensaje
+                LazyColumn(modifier = Modifier.weight(1f)) {
+                    items(mensajes.size) { index ->
+                        val enviado = mensajes[index].telefonoSender == userPhone
                         Box(
                             modifier = Modifier
-                                .align(if (enviado) Alignment.CenterEnd else Alignment.CenterStart)
-                                .clip(
-                                    RoundedCornerShape(
-                                        topStart = 48f,
-                                        topEnd = 48f,
-                                        bottomStart = if (enviado) 0f else 48f,
-                                        bottomEnd = if (enviado) 48f else 0f
-                                    )
-                                )
-                                .background(Color.Blue)
-                                .padding(16.dp)
+                                .fillMaxWidth()
+                                .padding(10.dp)
                         ) {
-                            Text(text = mensajes[index].message.toString())
+                            Box(
+                                modifier = Modifier
+                                    .align(if (enviado) Alignment.CenterEnd else Alignment.CenterStart)
+                                    .clip(
+                                        RoundedCornerShape(
+                                            topStart = 48f,
+                                            topEnd = 48f,
+                                            bottomStart = if (enviado) 0f else 48f,
+                                            bottomEnd = if (enviado) 48f else 0f
+                                        )
+                                    )
+                                    .background(Color.Blue)
+                                    .padding(16.dp)
+                            ) {
+                                Text(text = mensajes[index].message.toString())
+                            }
                         }
                     }
-
                 }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                OutlinedTextField(
-                    value = escrito,
-                    onValueChange = { escrito = it },
-                    label = { Text("Escribe un mensaje") },
-                    modifier = Modifier.weight(1f)
-                )
-                Button(onClick = {
-                    horaactual = formatter.format(LocalDateTime.now()).toString()
-                    GlobalScope.launch {
-                        firestore.createMessage(
-                            Mensajes(
-                                message = escrito,
-                                timestamp = horaactual,
-                                telefonoSender = userPhone,
-                                telefonoReceiver = OtherPhone,
-                                state = 0
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    OutlinedTextField(
+                        value = escrito,
+                        onValueChange = { escrito = it },
+                        label = { Text("Escribe un mensaje") },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Button(onClick = {
+                        horaactual = formatter.format(LocalDateTime.now()).toString()
+                        GlobalScope.launch {
+                            firestore.createMessage(
+                                Mensajes(
+                                    message = escrito,
+                                    timestamp = horaactual,
+                                    telefonoSender = userPhone,
+                                    telefonoReceiver = OtherPhone,
+                                    state = 0
+                                )
                             )
-                        )
+                        }
+                        escrito = ""
+                    }) {
+                        Text("Enviar")
                     }
-                }) {
-                    Text("Enviar")
                 }
             }
         })
