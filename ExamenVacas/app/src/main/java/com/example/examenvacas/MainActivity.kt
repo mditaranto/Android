@@ -20,7 +20,7 @@ class MainActivity() : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        database2 = Room.databaseBuilder(this, VacasDatabase::class.java, "VacasBBDD").build()
+        database2 = Room.databaseBuilder(this, VacasDatabase::class.java, "Vacas2").build()
 
         setContent {
             ExamenVacasTheme {

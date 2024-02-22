@@ -96,8 +96,8 @@ fun Vacas(navController: NavController) {
         })
 
 
-    val sdf = SimpleDateFormat("dd/M/yyyy")
-    val currentDate = sdf.format(Date())
+    val dataformat = SimpleDateFormat("dd/M/yyyy-hh:mm:ss")
+    val currentDate = dataformat.format(Date())
 
     var lista by remember { mutableStateOf<List<tVacaEntity>>(emptyList()) }
 
@@ -118,6 +118,7 @@ fun Vacas(navController: NavController) {
             addVaca(tVacaEntity(idVaca = 0, litrosActuales = 0))
         }
     }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
